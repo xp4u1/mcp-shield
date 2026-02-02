@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
+    "@types/fs-extra": "^11.0.4",
     "@types/json5": "^0.0.30",
     "@types/node": "^20.11.24",
     "@types/node-fetch": "^2.6.11",
