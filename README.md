@@ -48,6 +48,7 @@ npx mcp-shield --safe-list "github,slack,whatsapp"
 - `--claude-api-key <key>`: (Optional) Provide an Anthropic Claude API key for enhanced vulnerability analysis using AI.
 - `--identify-as <client-name>`: (Optional) Identify as a different client name (e.g., `claude-desktop`) when connecting to servers. Useful for testing if servers behave differently based on the client ID (potential bait-and-switch).
 - `--safe-list <servers>`: (Optional) Comma-separated list of server names to exclude from scanning. These servers will be skipped and also excluded from cross-origin violation detection.
+- `--save-json <path>`: (Optional) Path to a file to save the scan results in a machine readable format
 - `-h, --help`: Display help information.
 
 ## Output Example
