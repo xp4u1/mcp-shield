@@ -1,6 +1,6 @@
 import {Client} from '@modelcontextprotocol/sdk/client/index.js'
 import {StdioClientTransport} from '@modelcontextprotocol/sdk/client/stdio.js'
-import {SSEClientTransport} from '@modelcontextprotocol/sdk/client/sse.js'
+import {StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js'
 import {Transport} from '@modelcontextprotocol/sdk/shared/transport.js'
 
 export async function getTools(
@@ -13,9 +13,9 @@ export async function getTools(
   identifyAs?: string
 ) {
   const configUrl = serverConfig.url
-  const isSSE = !!configUrl
+  const isStreamableHTTP = !!configUrl
 
-  if (!isSSE && !serverConfig.command) {
+  if (!isStreamableHTTP && !serverConfig.command) {
     throw new Error('Missing command for STDIO server')
   }
 
@@ -28,10 +28,10 @@ export async function getTools(
 
   let transport: Transport | undefined
 
-  if (isSSE) {
-    // Create SSE transport with proper options structure
-    transport = new SSEClientTransport(new URL(configUrl))
-  } else if (!isSSE && serverConfig.command) {
+  if (isStreamableHTTP) {
+    // Create streamable HTTP transport with proper options structure
+    transport = new StreamableHTTPClientTransport(new URL(configUrl))
+  } else if (!isStreamableHTTP && serverConfig.command) {
     // Create STDIO transport with inherited environment
     const env: Record<string, string> = {}
 
