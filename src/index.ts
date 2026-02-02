@@ -7,6 +7,7 @@ import chalk from 'chalk'
 import logSymbols from 'log-symbols'
 import boxen from 'boxen'
 import {fileURLToPath} from 'url'
+import { writeFile } from 'node:fs/promises';
 
 import {scanMcpServer} from './scanner.js'
 import {findMcpConfigs} from './utils/config-finder.js'
@@ -327,12 +328,17 @@ program
     '--safe-list <servers>',
     'Comma-separated list of server names to exclude from scanning'
   )
+  .option(
+    '--save-json <path>',
+    'Save the scan results as json file'
+  )
   .action(
     async (options: {
       path: string
       claudeApiKey?: string
       identifyAs?: string
-      safeList?: string
+      safeList?: string,
+      saveJson?: string
     }) => {
       try {
         // Banner
@@ -400,6 +406,10 @@ program
 
         for (const {configPath, results} of resultsArr) {
           displayVulnerabilities(results, configPath)
+        }
+
+        if (options.saveJson) {
+          await writeFile(options.saveJson, JSON.stringify(resultsArr, null, 2), "utf8")
         }
       } catch (error: any) {
         console.error(
