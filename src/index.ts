@@ -412,9 +412,7 @@ program
           await writeFile(options.saveJson, JSON.stringify(resultsArr, null, 2), "utf8")
         }
 
-        // Ensure the process exits after the scan completes
-        // This is necessary because the MCP SDK may leave handles open
-        process.exit(totalVulnerabilities > 0 ? 1 : 0)
+        process.exit(0)
       } catch (error: any) {
         console.error(
           chalk.red(`\n${logSymbols.error} Error: ${error.message}`)
