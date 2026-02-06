@@ -369,7 +369,7 @@ program
               `${logSymbols.warning} No MCP server configurations found.`
             )
           )
-          return
+          process.exit(0)
         }
 
         // Track overall vulnerabilities
@@ -411,6 +411,10 @@ program
         if (options.saveJson) {
           await writeFile(options.saveJson, JSON.stringify(resultsArr, null, 2), "utf8")
         }
+
+        // Ensure the process exits after the scan completes
+        // This is necessary because the MCP SDK may leave handles open
+        process.exit(totalVulnerabilities > 0 ? 1 : 0)
       } catch (error: any) {
         console.error(
           chalk.red(`\n${logSymbols.error} Error: ${error.message}`)
