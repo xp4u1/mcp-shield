@@ -39,6 +39,7 @@ const getRiskLevel = (severity: Severity, message?: string) => {
 async function scanWithTreeDisplay(
   configPath: string,
   claudeApiKey?: string,
+  azureAnalysis?: boolean,
   identifyAs?: string,
   safeList?: string[]
 ) {
@@ -168,6 +169,7 @@ async function scanWithTreeDisplay(
       configPath,
       progressCallback,
       claudeApiKey,
+      azureAnalysis,
       identifyAs,
       safeList
     )
@@ -244,6 +246,14 @@ function displayVulnerabilities(
         )
       }
 
+      if (vuln.azureAnalysis?.overallRisk) {
+        console.log(
+          `   AI Risk Level: ${getRiskLevel(
+            vuln.azureAnalysis.overallRisk
+          )}`
+        )
+      }
+
       console.log('   Issues:')
 
       // Display details if available
@@ -300,6 +310,16 @@ function displayVulnerabilities(
           )}`
         )
       }
+
+      if (vuln.azureAnalysis) {
+        console.log('\n   AI Analysis:')
+        console.log(
+          `     ${vuln.azureAnalysis.analysis.replace(
+            /\n/g,
+            '\n     '
+          )}`
+        )
+      }
     }
 
     console.log() // Add spacing between vulnerabilities
@@ -321,6 +341,10 @@ program
     'Optional Anthropic Claude API key for enhanced analysis'
   )
   .option(
+    '--azure-openai',
+    'Optional analysis using Azure OpenAI endpoint'
+  )
+  .option(
     '--identify-as <client-name>',
     'Identify as a different client name (e.g., claude-desktop) for testing'
   )
@@ -336,6 +360,7 @@ program
     async (options: {
       path: string
       claudeApiKey?: string
+      azureOpenai?: boolean
       identifyAs?: string
       safeList?: string,
       saveJson?: string
@@ -383,6 +408,7 @@ program
             const results = await scanWithTreeDisplay(
               configPath,
               options.claudeApiKey,
+              options.azureOpenai,
               options.identifyAs,
               options.safeList
                 ? options.safeList.split(',').map((s) => s.trim())

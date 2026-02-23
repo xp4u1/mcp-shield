@@ -51,6 +51,18 @@ npx mcp-shield --safe-list "github,slack,whatsapp"
 - `--save-json <path>`: (Optional) Path to a file to save the scan results in a machine readable format
 - `-h, --help`: Display help information.
 
+**Environment variables:**
+
+If you want to use the Azure OpenAI endpoint for the LLM analysis, you have to specify
+following environment variables:
+
+```env
+AZURE_OPENAI_API_KEY="your_api_key"
+AZURE_MODEL="azure/gpt-4o"
+OPENAI_BASE_URL="https://your-endpoint.openai.azure.com/"
+OPENAI_API_VERSION="2025-03-01-preview"
+```
+
 ## Output Example
 
 ```

@@ -133,7 +133,7 @@ export interface DetectionDetails {
 
 export type Severity = 'HIGH' | 'MEDIUM' | 'LOW'
 
-export interface ClaudeAnalysis {
+export interface LLMAnalysis {
   overallRisk: Severity | null
   analysis: string
 }
@@ -150,7 +150,8 @@ export interface Vulnerability {
   server: string
   tool?: string
   detectionDetails?: DetectionDetails
-  claudeAnalysis?: ClaudeAnalysis
+  claudeAnalysis?: LLMAnalysis
+  azureAnalysis?: LLMAnalysis
   crossRefMatches?: CrossRefMatch[]
 }
 

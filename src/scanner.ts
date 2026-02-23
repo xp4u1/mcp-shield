@@ -14,13 +14,15 @@ import {
   ScanResult,
   Vulnerability,
   CrossRefMatch,
-  ClaudeAnalysis,
+  LLMAnalysis,
 } from './types.js'
+import { analyzeWithAzure } from './analyzers/azure-analyzer.js'
 
 export async function scanMcpServer(
   configPath: string,
   progressCallback: ScanProgressCallback,
   claudeApiKey?: string,
+  azureOpenai?: boolean,
   identifyAs?: string,
   safeList?: string[]
 ): Promise<ScanResult> {
@@ -162,7 +164,7 @@ export async function scanMcpServer(
             details.push('Attempts to access sensitive files')
 
           // Optionally use Claude for enhanced analysis
-          let claudeAnalysis: ClaudeAnalysis | undefined
+          let claudeAnalysis: LLMAnalysis | undefined
           if (
             claudeApiKey &&
             (hasHiddenInstructions ||
@@ -176,12 +178,26 @@ export async function scanMcpServer(
             )
           }
 
+          let azureAnalysis: LLMAnalysis | undefined
+          if (
+            azureOpenai &&
+            (hasHiddenInstructions ||
+              hasShadowing ||
+              accessesSensitiveFiles) &&
+            tool.description
+          ) {
+            azureAnalysis = await analyzeWithAzure(
+              tool.description
+            )
+          }
+
           const vulnerability: Vulnerability = {
             severity,
             server: serverName,
             tool: tool.name,
 
             claudeAnalysis,
+            azureAnalysis,
             detectionDetails,
           }
 
